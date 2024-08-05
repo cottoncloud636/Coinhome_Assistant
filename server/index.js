@@ -18,8 +18,13 @@ app.post('/api/openai', async(req, res)=>{ //asynchronous, meaning it will wait 
       ];
       const completion = await createCompletion(messages);
       res.json(completion);
+      console.log(completion);
     } catch (error) {
-      res.status(500).json({error: 'Error calling OpenAI API'});
+      if (error.code === 'insufficient_quota') {
+        res.status(429).json({ error: 'You have exceeded your quota. Please try again later or upgrade your plan.' });
+      } else {
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+      }
     }
   }
 );

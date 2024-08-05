@@ -10,6 +10,8 @@ client.
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
+console.log('OpenAI API Key:', process.env.OPENAI_API_KEY);
+
 
 /*Function createCompletion: This function creates a completion using the OpenAI API. It takes in an
  array of messages and optionally a model (with a default model provided). The function handles errors
