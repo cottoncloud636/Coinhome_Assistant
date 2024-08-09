@@ -1,28 +1,16 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-html{
-    font-size: 62.5%; 
-}
 
-body{
-    color: black;
-    background: whitesmoke;
-    font-family: "Poppins", sans-serif;
-}
 
-.App{
-    min-height: 100vh;/*unit of measurement relative to 1% of the height of the viewport (the visible area of a web page on the user's device). */
-    display: flex;
-}
 
 /*start: leftbar area*/
 .leftbar{
-    flex: 3;
+    flex: 2.5;
     background-color: #F0FF39;
+    padding: 2rem 1rem;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 .leftUpperBar{
     padding: 2rem;
@@ -39,7 +27,7 @@ body{
     margin-right: 1rem;
 }
 .company{
-    font-size: 1.5rem;
+    font-size: 1.rem;
 
 }
 .addChatBtn{
@@ -51,7 +39,7 @@ body{
 .newChat{
     background: #f2eb65;
     border: none; /* No border */
-    /* padding: 1.5rem; */
+    padding: 1.5rem;
     border-radius: 0.5rem; /* Rounded corners */
     width: 25rem;
     cursor: pointer; /* Pointer cursor on hover */
@@ -64,26 +52,32 @@ body{
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Shadow */
     transition: box-shadow 0.3s ease; /* Smooth transition for shadow change */
 }
+.newChat:hover{
+    background: #f4efa8;
+}
+
+
 .msg{
     display: flex;
     justify-content: flex-start;
-    background: #eceab6;
-    font-size: 1.5rem;
+    background-color: transparent;
+    font-size: 1.6rem;
     padding: 1.5rem;
     width: 25rem;
     margin: 1rem auto;
     border-radius: 0.6rem;
-    border: 1px solid rgb(179, 174, 174)
+    border: 2px solid rgb(179, 174, 174)
 }
 .msg>img{
     margin-right: 2rem;
     object-fit: cover;
-    height: 1.75rem;
+    height: 2rem;
 }
 .msgIcon{
-    width: 40px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
 }
+
 .listItem{
     display: flex;
     align-items: center;
@@ -99,7 +93,11 @@ body{
 
 }
 .leftBottomBar{
-    border-top: 1px solid rgb(212, 208, 208);
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(163, 159, 159);
+    align-items: flex-start;
+    width: 100%;
 }
 
 
@@ -111,9 +109,13 @@ body{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
+    justify-content: flex-end;
+    /* height: 100%; */
+
     margin: 8rem 10rem;
+    margin-bottom: 0; 
+
+    
 }
 .conversation {
     display: flex;
@@ -122,6 +124,7 @@ body{
 }
 .conversation img {
     margin-right: 1rem;
+   
 }
 
 .conversation p {
@@ -138,7 +141,7 @@ body{
 }
 
 .conversation.bot p {
-    background-color: #e6dada; /* Light grey for bot messages */
+    background-color: #e6e6e0; /* Light grey for bot messages */
     align-self: flex-start;
 }
 
@@ -153,45 +156,84 @@ body{
     height: 30px;
 }
 
-.sendArea{
-    margin-top: auto;
-    width: 50%;
-    align-items: center;
-    /* display: flex;
-    flex-direction: column;
+.chatArea {
+    /* flex-grow: 1; */
+    /* width: 100%; */
     
-    justify-content: center; */
-    padding: 1rem 2rem;
+    width: 100%;
+    
+    /* padding: 2rem 4rem; Padding around chat content */
+    padding-bottom: 4rem; 
     box-sizing: border-box;
+
+    overflow: auto;
+    overflow-y: scroll; /* Scrollable chat area */
+    scroll-behavior: smooth;
+    height: calc(100vh - 22rem);
 }
 
-.chatArea {
-    flex-grow: 1;
-    width: 100%;
-    overflow-y: auto; /* Scrollable chat area */
-    padding: 2rem 4rem; /* Padding around chat content */
+
+.sendArea{
+    position: sticky;
+    margin-bottom: auto;
+    width: 100%; /* Adjust according to the margin */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
     box-sizing: border-box;
+    
+
+    /* position: fixed; */
+        /* bottom: 0;
+    right: 0; */
+    /* background: white; */
 }
+
 
 .inputArea {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 70rem;
+    border-radius: 0.6rem;
+    padding: 0.5rem;
+
 }
 
-.inputArea input {
-    flex-grow: 1;
+.inputArea textarea {
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 1rem;
     padding: 1rem;
     font-size: 1.6rem;
     outline: none;
+    resize: none; /* Disable manual resizing */
+    overflow-y: hidden; /* Hide overflow */
+    background-color: transparent;
 }
 
-.inputArea button {
+/* This ensures that the textarea automatically resizes */
+.auto-resize-textarea {
+    min-height: 40px;
+    max-height: 200px; /* Set a max-height if needed */
+    line-height: 1.5;
+}
+.inputArea>input, .send{
+    background-color: transparent;
+    border: none;
+}
+
+
+
+.inputArea, .send {
     background: none;
     border: none;
     margin-left: 1rem;
     cursor: pointer;
     padding: 0;
 }   
+
+.footer{
+    margin: 2rem 0;
+}

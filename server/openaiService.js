@@ -76,24 +76,6 @@ export async function runAssistant(threadId) {
           process.stdout.write(textDelta.value);
           accumulatedText += textDelta.value;
         })
-        .on('toolCallCreated', (toolCall) => {
-          process.stdout.write(`\nassistant > ${toolCall.type}\n\n`);
-        })
-        .on('toolCallDelta', (toolCallDelta, snapshot) => {
-          if (toolCallDelta.type === 'code_interpreter') {
-            if (toolCallDelta.code_interpreter.input) {
-              process.stdout.write(toolCallDelta.code_interpreter.input);
-            }
-            if (toolCallDelta.code_interpreter.outputs) {
-              process.stdout.write("\noutput >\n");
-              toolCallDelta.code_interpreter.outputs.forEach(output => {
-                if (output.type === "logs") {
-                  process.stdout.write(`\n${output.logs}\n`);
-                }
-              });
-            }
-          }
-        })
         .on('end', () => {
           resolve(accumulatedText);
         })
@@ -107,6 +89,54 @@ export async function runAssistant(threadId) {
     }
   });
 }
+
+
+// export async function runAssistant(threadId) {
+//   return new Promise((resolve, reject) => {
+//     try {
+//       let accumulatedText = '';
+//       const run = openai.beta.threads.runs.stream(threadId, {
+//         assistant_id: assistantId,
+//       })
+//         .on('textCreated', (text) => {
+//           process.stdout.write('\nassistant > ');
+//           accumulatedText += text;
+//         })
+//         .on('textDelta', (textDelta, snapshot) => {
+//           process.stdout.write(textDelta.value);
+//           accumulatedText += textDelta.value;
+//         })
+//         .on('toolCallCreated', (toolCall) => {
+//           process.stdout.write(`\nassistant > ${toolCall.type}\n\n`);
+//         })
+//         .on('toolCallDelta', (toolCallDelta, snapshot) => {
+//           if (toolCallDelta.type === 'code_interpreter') {
+//             if (toolCallDelta.code_interpreter.input) {
+//               process.stdout.write(toolCallDelta.code_interpreter.input);
+//             }
+//             if (toolCallDelta.code_interpreter.outputs) {
+//               process.stdout.write("\noutput >\n");
+//               toolCallDelta.code_interpreter.outputs.forEach(output => {
+//                 if (output.type === "logs") {
+//                   process.stdout.write(`\n${output.logs}\n`);
+//                 }
+//               });
+//             }
+//           }
+//         })
+//         .on('end', () => {
+//           resolve(accumulatedText);
+//         })
+//         .on('error', (error) => {
+//           console.error('Error during assistant run:', error);
+//           reject(error);
+//         });
+//     } catch (error) {
+//       console.error('Error running assistant:', error);
+//       reject(error);
+//     }
+//   });
+// }
   // export async function fallbackToLLM(threadId, query) {
   //   try {
   //     const response = await openai.chat.completions.create({

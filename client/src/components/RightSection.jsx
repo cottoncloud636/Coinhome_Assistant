@@ -48,20 +48,31 @@ const RightSection = ({allChats, setAllChats}) => {
             console.log('Received data from backend:', data);
             let responseContent = data.message;
 
+            let pattern = /【.*?】/g;
+            responseContent = responseContent.replace(pattern, '').trim();
             
             if (Array.isArray(responseContent)) {
                 responseContent = responseContent.join(' ');
             }
             
             // If the responseContent is an object with keys 'value' and 'annotations', use 'value'
-            if (typeof responseContent === 'object' && responseContent.value) {
-                responseContent = responseContent.value;
+            // if (typeof responseContent === 'object' && responseContent.value) {
+            //     responseContent = responseContent.value;
+            // }
+            if (typeof responseContent === 'object') {
+                responseContent = JSON.stringify(responseContent);
             }
             
             // Ensure responseContent is a string
             if (typeof responseContent !== 'string') {
                 responseContent = JSON.stringify(responseContent);
             }
+
+            if (responseContent.startsWith("[object Object]")) {
+                responseContent = responseContent.replace("[object Object]", "").trim();
+              }
+            
+            
 
             if (responseContent) {
                 const assistantMessage = {
@@ -82,7 +93,8 @@ const RightSection = ({allChats, setAllChats}) => {
         <div className='rightbar'>
             <div className='chatArea'>
                 {chat.messages.map((msg, index) => (
-                    <div key={index} className = {`conversation ${msg.role}`}>
+                    <div key={index} 
+                        className = {`conversation ${msg.role} ${msg.role === 'assistant' ? 'bot' : ''}`}>
                         <img src={msg.role === 'user' ? userPen : coinhomeIcon} className='chatIcon'/>
                         <p>{msg.content}</p>
                     </div>
@@ -91,21 +103,20 @@ const RightSection = ({allChats, setAllChats}) => {
 
             <div className='sendArea'>
                 <div className='inputArea'>
-                    <input 
-                        type='text'
+                    <textArea className = 'autoresize-textarea'
+                        // type='text'
                         value={message}
                         onChange = {e => setMessage(e.target.value)}
-                        onKeyDown={e => {if (e.key === 'Enter') sendMessage(); }}
+                        onKeyDown={e => {if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}}
                         placeholder = 'Message Coinhome Assistant'
+                        row='1'
                     />
-                    <button onClick={sendMessage}>
+                    <button onClick={sendMessage} className='send'>
                         <img src={send} alt='sendIcon' className='sendIcon'/>
                     </button>
                 </div>
+                <p className='footer'>Our chat assistant could make mistake, please check important information.</p>
             </div>
-
-            <div><p>Our chat assistant could make mistake, please check important information.</p></div>
-
         </div>
   );
 }
