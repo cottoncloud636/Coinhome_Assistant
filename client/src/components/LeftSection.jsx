@@ -41,12 +41,12 @@ const LeftSection = ({allChats=[], createNewChat}) => {
                     {/* <button className='msg'><img src={message} alt='messageIcon'/>What is coinhome</button> */}
                 </div>
             </div>  
-
+{/* 
             <div className='leftBottomBar'>
                 <div className='listItem'><img src={deleteIcon} alt='itemIcon' className='listItemImg'/>Clear conversations</div>
                 <div className='listItem'><img src={setting} alt='itemIcon' className='listItemImg'/>Settings</div>
                 <div className='listItem'><img src={logout} alt='itemIcon' className='listItemImg'/>Logout</div>
-            </div>
+            </div> */}
 
         </div>
   )
