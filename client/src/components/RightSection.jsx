@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 import userPen from '../assets/user-pen.svg';
 import send from '../assets/send.svg';
@@ -90,20 +91,21 @@ const RightSection = ({allChats, setAllChats}) => {
     
 
     return (
-        <div className='rightbar'>
+        <div className='rightbar'>  
             <div className='chatArea'>
                 {chat.messages.map((msg, index) => (
                     <div key={index} 
                         className = {`conversation ${msg.role} ${msg.role === 'assistant' ? 'bot' : ''}`}>
                         <img src={msg.role === 'user' ? userPen : coinhomeIcon} className='chatIcon'/>
-                        <p>{msg.content}</p>
+                    
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
                 ))}
             </div>
 
             <div className='sendArea'>
                 <div className='inputArea'>
-                    <textArea className = 'autoresize-textarea'
+                    <textArea className = 'auto-resize-textarea'
                         // type='text'
                         value={message}
                         onChange = {e => setMessage(e.target.value)}
