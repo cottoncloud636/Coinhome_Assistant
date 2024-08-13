@@ -61,7 +61,10 @@ export async function addMessageToThread(threadId, content) {
   }
 }
 
-export async function runAssistant(threadId) {
+/*
+1) res: res obj comes from Express.js and is part of the request-response lifecycle in an Express route handler.
+*/
+export async function runAssistant(threadId, res) { 
   return new Promise((resolve, reject) => {
     try {
       let accumulatedText = '';
@@ -69,15 +72,17 @@ export async function runAssistant(threadId) {
         assistant_id: assistantId,
       })
         .on('textCreated', (text) => {
-          process.stdout.write('\nassistant > ');
+          process.stdout.write('\nassistant > '); //write to console, for debug and monitoring purpose
           accumulatedText += text;
         })
-        .on('textDelta', (textDelta, snapshot) => {
+        .on('textDelta', (textDelta) => {
+          res.write(textDelta.value); //++++++++++++++++++++++++++
           process.stdout.write(textDelta.value);
           accumulatedText += textDelta.value;
         })
         .on('end', () => {
           resolve(accumulatedText);
+          res.end();//++++++++++++++++++++++++
         })
         .on('error', (error) => {
           console.error('Error during assistant run:', error);
@@ -137,16 +142,3 @@ export async function runAssistant(threadId) {
 //     }
 //   });
 // }
-  // export async function fallbackToLLM(threadId, query) {
-  //   try {
-  //     const response = await openai.chat.completions.create({
-  //       model: 'gpt-3.5-turbo-0125',
-  //       messages: [{ role: 'user', content: query }],
-  //     });
-  
-  //     return response.choices[0].message.content;
-  //   } catch (error) {
-  //     console.error('Error in fallback LLM call:', error);
-  //     throw error;
-  //   }
-  // }

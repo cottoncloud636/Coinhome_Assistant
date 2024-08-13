@@ -22,18 +22,20 @@ app.post('/api/openai', async(req, res)=>{ //asynchronous, meaning it will wait 
       // Add the user's prompt as a message to the thread
       await addMessageToThread(thread.id, prompt);
        // Step 4: Run the assistant to get a response
-      const responseText = await runAssistant(thread.id);
+      await runAssistant(thread.id, res);
 
     // Return the response to the client
-    res.json({ message: responseText });
+    // res.json({ message: responseText }); -- No need to call `res.json()` here since `runAssistant` is handling the response streaming.
   } catch (error) {
     console.error('Error in /api/openai route:', error);
-    if (error.code === 'insufficient_quota') {
-      res.status(429).json({ error: 'You have exceeded your quota. Please try again later or upgrade your plan.' });
-    } else {
-      res.status(500).json({ error: 'An error occurred while processing your request.' });
-    }
+    if (!res.headersSent) {
+      if (error.code === 'insufficient_quota') {
+        res.status(429).json({ error: 'You have exceeded your quota. Please try again later or upgrade your plan.' });
+      } else {
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+      }
   }
+}
 });
 
 app.listen(port, () => {

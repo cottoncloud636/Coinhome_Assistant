@@ -11,6 +11,8 @@ const RightSection = ({allChats, setAllChats}) => {
     const {chatId} = useParams();
     const chat = allChats.find(c=>c.id === parseInt(chatId));
     const [message, setMessage] = useState('');
+    const [isStreaming, setIsStreaming] = useState(false);
+
     if (!chat){
         return <div className='rightbar'>Select a chat</div>
     }
@@ -26,8 +28,7 @@ const RightSection = ({allChats, setAllChats}) => {
                 content: message
             }
         ];
-        // setAllMessages(newMessages);
-        // setMessage(''); //clear input field
+
         const updatedChats = allChats.map(
             c => c.id === chat.id ? {...c, messages: newMessages} : c
         );
@@ -36,6 +37,7 @@ const RightSection = ({allChats, setAllChats}) => {
 
         /*integrate with backend in here. User send a request to this endpoint, and specify the request method and content */
         try {
+            setIsStreaming(true);//++++++++++++++
             const response = await fetch('http://localhost:3000/api/openai', {
                 method: 'POST',
                 headers: {
@@ -45,51 +47,63 @@ const RightSection = ({allChats, setAllChats}) => {
                                                      //"prompt": name of the property being sent in the request body"
                 }
             );
-            const data = await response.json();
-            console.log('Received data from backend:', data);
-            let responseContent = data.message;
 
-            let pattern = /【.*?】/g;
-            responseContent = responseContent.replace(pattern, '').trim();
-            
-            if (Array.isArray(responseContent)) {
-                responseContent = responseContent.join(' ');
-            }
-            
-            // If the responseContent is an object with keys 'value' and 'annotations', use 'value'
-            // if (typeof responseContent === 'object' && responseContent.value) {
-            //     responseContent = responseContent.value;
-            // }
-            if (typeof responseContent === 'object') {
-                responseContent = JSON.stringify(responseContent);
-            }
-            
-            // Ensure responseContent is a string
-            if (typeof responseContent !== 'string') {
-                responseContent = JSON.stringify(responseContent);
-            }
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let assistantMessage = {
+                role: 'assistant',
+                content: ''
+            };
 
-            if (responseContent.startsWith("[object Object]")) {
-                responseContent = responseContent.replace("[object Object]", "").trim();
-              }
-            
-            
+            let tempChunk = '';
+            while (true){
+                const {done, value} = await reader.read();
+                if (done) break;
+                let chunk = decoder.decode(value, {stream: true});
+                
+                let pattern = /【.*?】/g;
+                chunk = chunk.replace(pattern, '').trim();
 
-            if (responseContent) {
-                const assistantMessage = {
-                    role: 'assistant',
-                    content: responseContent
-                };
+                tempChunk += chunk;
+                const words = tempChunk.split(/(\s+)/);
+                tempChunk = words.pop();
+                words.forEach(word => {
+                    assistantMessage.content += word;
+                    setAllChats(prevChats => prevChats.map(
+                        c => c.id === chat.id ? {
+                            ...c, 
+                            messages: [...newMessages, {...assistantMessage}] 
+                        } : c
+                    ));
+                });
+            }
+                // if (Array.isArray(chunk)) {
+                //     chunk = chunk.join(' ');
+                // }
+
+                // if (typeof chunk === 'object') {
+                //     chunk = JSON.stringify(chunk);
+                // }
+
+                // if (typeof chunk !== 'string') {
+                //     chunk = JSON.stringify(chunk);
+                // }
+    
+                // if (chunk.startsWith("[object Object]")) {
+                //     chunk = chunk.replace("[object Object]", "").trim();
+                //   }
+                
+                assistantMessage.content += tempChunk;
                 setAllChats(prevChats => prevChats.map(
                     c => c.id === chat.id ? { ...c, messages: [...newMessages, assistantMessage] } : c
-                ));
-            }
+                ));          
+            setIsStreaming(false);
         } catch (error) {
             console.log('Error:', error);
+            setIsStreaming(false);
         }
     };
     
-
     return (
         <div className='rightbar'>  
             <div className='chatArea'>
@@ -101,17 +115,18 @@ const RightSection = ({allChats, setAllChats}) => {
                         <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
                 ))}
+                {isStreaming && <div className='loading'>Loading...</div>}
             </div>
 
             <div className='sendArea'>
                 <div className='inputArea'>
-                    <textArea className = 'auto-resize-textarea'
+                    <textarea className = 'auto-resize-textarea'
                         // type='text'
                         value={message}
                         onChange = {e => setMessage(e.target.value)}
                         onKeyDown={e => {if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}}
                         placeholder = 'Message Coinhome Assistant'
-                        row='1'
+                        // row='1'
                     />
                     <button onClick={sendMessage} className='send'>
                         <img src={send} alt='sendIcon' className='sendIcon'/>
