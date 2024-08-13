@@ -7,7 +7,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-let assistantId = 'asst_QDUH2Y2cVDyUPXMshM2uDwRM'; // Assume the assistant is already created
+let assistantId = process.env.ASSISTANTS_ID;
 
 // export async function createAssistant() {
 //   try {
