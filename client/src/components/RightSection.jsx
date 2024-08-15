@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
+import useChatStream from '@magicul/react-chat-stream';
 import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 import userPen from '../assets/user-pen.svg';
@@ -11,8 +12,17 @@ const RightSection = ({allChats, setAllChats}) => {
     const {chatId} = useParams();
     const chat = allChats.find(c=>c.id === parseInt(chatId));
     const [message, setMessage] = useState('');
-    const [isStreaming, setIsStreaming] = useState(false);
+    const [streamedContent, setStreamedContent] = useState('');
+    const chatAreaRef = useRef(null);
 
+    const { isStreaming } = useChatStream();
+
+    useEffect(() => {
+        if (chatAreaRef.current) {
+            chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        }
+    }, [chat?.messages]);
+        
     if (!chat){
         return <div className='rightbar'>Select a chat</div>
     }
@@ -37,85 +47,61 @@ const RightSection = ({allChats, setAllChats}) => {
 
         /*integrate with backend in here. User send a request to this endpoint, and specify the request method and content */
         try {
-            setIsStreaming(true);//++++++++++++++
             const response = await fetch('http://localhost:3000/api/openai', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' //a standard HTTP header used to indicate the media type of the resource
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({prompt: message}),//"message": The value assigned to the prompt property. Same value as "message" in state
-                                                     //"prompt": name of the property being sent in the request body"
-                }
-            );
+                body: JSON.stringify({ prompt: message }),
+            });
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
-            let assistantMessage = {
-                role: 'assistant',
-                content: ''
-            };
 
-            let tempChunk = '';
-            while (true){
-                const {done, value} = await reader.read();
+            let tempContent = ''; // Store current streamed content
+
+            while (true) {
+                const { done, value } = await reader.read();
                 if (done) break;
-                let chunk = decoder.decode(value, {stream: true});
-                
+                let chunk = decoder.decode(value, { stream: true });
+
+                tempContent += chunk;
                 let pattern = /【.*?】/g;
-                chunk = chunk.replace(pattern, '').trim();
+                tempContent = tempContent.replace(pattern, '').trim();
 
-                tempChunk += chunk;
-                const words = tempChunk.split(/(\s+)/);
-                tempChunk = words.pop();
-                words.forEach(word => {
-                    assistantMessage.content += word;
-                    setAllChats(prevChats => prevChats.map(
-                        c => c.id === chat.id ? {
-                            ...c, 
-                            messages: [...newMessages, {...assistantMessage}] 
-                        } : c
-                    ));
-                });
+                // Update the chat.messages with the streamed content
+                const updatedMessages = [...newMessages, { role: 'assistant', content: tempContent }];
+                setAllChats(prevChats =>
+                    prevChats.map(c =>
+                        c.id === chat.id ? { ...c, messages: updatedMessages } : c
+                    )
+                );
             }
-                // if (Array.isArray(chunk)) {
-                //     chunk = chunk.join(' ');
-                // }
-
-                // if (typeof chunk === 'object') {
-                //     chunk = JSON.stringify(chunk);
-                // }
-
-                // if (typeof chunk !== 'string') {
-                //     chunk = JSON.stringify(chunk);
-                // }
-    
-                // if (chunk.startsWith("[object Object]")) {
-                //     chunk = chunk.replace("[object Object]", "").trim();
-                //   }
-                
-                assistantMessage.content += tempChunk;
-                setAllChats(prevChats => prevChats.map(
-                    c => c.id === chat.id ? { ...c, messages: [...newMessages, assistantMessage] } : c
-                ));          
-            setIsStreaming(false);
         } catch (error) {
             console.log('Error:', error);
-            setIsStreaming(false);
         }
     };
-    
+
     return (
-        <div className='rightbar'>  
+        <div className='rightbar' ref={chatAreaRef}>  
             <div className='chatArea'>
                 {chat.messages.map((msg, index) => (
                     <div key={index} 
                         className = {`conversation ${msg.role} ${msg.role === 'assistant' ? 'bot' : ''}`}>
                         <img src={msg.role === 'user' ? userPen : coinhomeIcon} className='chatIcon'/>
-                    
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        <ReactMarkdown>
+                            {msg.content}
+                        </ReactMarkdown>
                     </div>
                 ))}
-                {isStreaming && <div className='loading'>Loading...</div>}
+
+               {/* Display the streamed messages */}
+               {/* {streamedContent && (
+                    <div className={`conversation bot`}>
+                        <img src={coinhomeIcon} className='chatIcon'/>
+                        <div className="messageContent">{streamedContent}</div>
+                    </div>
+                )} */}
             </div>
 
             <div className='sendArea'>

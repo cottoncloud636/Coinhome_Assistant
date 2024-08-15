@@ -125,13 +125,15 @@
 
     margin: 8rem 10rem;
     margin-bottom: 0; 
-
+    overflow: hidden;
     
 }
 .conversation {
     display: flex;
     align-items: flex-start;
     margin-bottom: 1.5rem;
+    white-space: pre-wrap;
+    word-break: break-word; 
 }
 .conversation img {
     margin-right: 1rem;
@@ -154,6 +156,8 @@
 .conversation.bot p {
     background-color: #e6e6e0; /* Light grey for bot messages */
     align-self: flex-start;
+    white-space: normal; /* Ensure words wrap normally */
+    display: inline-block;
 }
 
 
@@ -172,6 +176,7 @@
     /* width: 100%; */
     
     width: 100%;
+    word-break: break-word;
     
     /* padding: 2rem 4rem; Padding around chat content */
     padding-bottom: 4rem; 
