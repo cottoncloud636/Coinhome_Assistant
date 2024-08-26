@@ -94,14 +94,6 @@ const RightSection = ({allChats, setAllChats}) => {
                         </ReactMarkdown>
                     </div>
                 ))}
-
-               {/* Display the streamed messages */}
-               {/* {streamedContent && (
-                    <div className={`conversation bot`}>
-                        <img src={coinhomeIcon} className='chatIcon'/>
-                        <div className="messageContent">{streamedContent}</div>
-                    </div>
-                )} */}
             </div>
 
             <div className='sendArea'>

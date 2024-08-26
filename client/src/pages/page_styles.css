@@ -1,0 +1,19 @@
+.outerContainer{
+    width: 100vw; /*100% viewpoint, to make the width and height same as browser*/
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: 
+        radial-gradient(ellipse, rgba(0, 0, 0, 0.2) 10px, transparent 1px),
+        radial-gradient(ellipse, rgba(0, 0, 0, 0.2) 10px, transparent 1px),
+        linear-gradient(to right, #e3e76f, #4f5133);
+    background-size: 20px 20px, 10px 10px, cover; /* Adjust grid size */
+    background-position: 0 0, 10px 10px; /* Shift the second grid for alignment */
+}
+
+.robot-image{
+    width: 120px;
+    height: 120px;
+}
