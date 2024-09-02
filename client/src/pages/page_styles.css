@@ -17,3 +17,64 @@
     width: 120px;
     height: 120px;
 }
+
+.welcome-text{
+    font-family: "Montserrat Subrayada", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 20px;
+}
+
+.landing-button{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-optical-sizing: auto;
+    background-color: #292b1c;
+    color: rgb(193, 175, 74);
+    width: 100px;
+    height: 30px;
+    margin: 0 10px;
+    border: none;
+    position: relative; /* Set position for the glowing circle */
+    overflow: hidden; /* Hide the circle overflow */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    z-index: 1; /* Ensure the button is above the glowing circle */
+   
+}
+
+/* Halo effect */
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1; /* Place the glowing circle behind the button */
+}
+
+/* Hover effect */
+button:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+button:hover {
+    opacity: 0.8; /* Dim opacity slightly on hover */
+    cursor: pointer; /* Change cursor to pointer */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Intensify halo effect on hover */
+}
+
+
+
+/*signup page*/
+.bg{
+    background-image: url('../assets/singup-loging-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
