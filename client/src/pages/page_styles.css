@@ -43,7 +43,7 @@
 }
 
 /* Halo effect */
-button::before {
+.landing-button::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -58,11 +58,11 @@ button::before {
 }
 
 /* Hover effect */
-button:hover::before {
+.landing-button:hover::before {
     transform: translate(-50%, -50%) scale(1);
 }
 
-button:hover {
+.landing-button:hover {
     opacity: 0.8; /* Dim opacity slightly on hover */
     cursor: pointer; /* Change cursor to pointer */
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Intensify halo effect on hover */
@@ -77,4 +77,82 @@ button:hover {
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bg h1{
+    color: rgb(193, 175, 74);
+    font-family: "Zen Dots", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 10px;
+}
+
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%); 
+    border: 0;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 20px;
+}
+
+.form-group{
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.email-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.continue-button{
+    background-color: #f0e21f;
+    color: rgb(14, 10, 10);
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Add a smooth transition */
+}
+
+.continue-button:hover{
+    background-color: #fff94d; /* Reduce opacity to create dimming effect */
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
+}
+
+.login-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: rgb(230, 230, 124);
+}
+
+.login-link a {
+    color: #f1e542;
+    text-decoration: none;
 }
