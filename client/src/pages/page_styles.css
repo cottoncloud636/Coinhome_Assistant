@@ -70,7 +70,7 @@
 
 
 
-/*signup page*/
+/* Begin: signup page */
 .bg{
     background-image: url('../assets/singup-loging-bg.jpg');
     background-size: cover;
@@ -90,6 +90,44 @@
     font-style: normal;
     margin-bottom: 10px;
 }
+
+.verification-message{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.verification-message p{
+    color: rgb(245, 242, 211);
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    
+}
+
+.verification-message button{
+    background-color: #f0e21f;
+    color: rgb(14, 10, 10);
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    width: 60%;
+    height: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+}
+.verification-message button:hover{
+    background-color: #fff94d; /* Reduce opacity to create dimming effect */
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
+}
+
+.email-icon{
+    font-size: 12rem; /* use font-size instead of height and width to size it because it is a font-based icon (or SVG
+                     treated as text) from React Icons library. */
+    color:  #f0e21f; /* Grey color for the icon */
+    margin-bottom: 15px;
+}
+
 
 
 .visually-hidden {
@@ -156,3 +194,5 @@
     color: #f1e542;
     text-decoration: none;
 }
+/* End: Signup page*/
+

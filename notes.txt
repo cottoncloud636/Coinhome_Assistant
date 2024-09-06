@@ -1,0 +1,7 @@
+npm install mongodb
+
+npm i mongoose
+
+npm i morgan
+
+npm i validator

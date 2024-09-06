@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { MdMarkEmailRead } from "react-icons/md";
 import './page_styles.css';
 
 /*
@@ -9,6 +10,8 @@ import './page_styles.css';
  *  
     step 1: capture user input change when enter info into form
     step 2: to track if form is submitted
+    step 3: form submitted, a verification email is sent to user's email address
+            - setup mongoDB, to temp store user info. in sever.js
  * 
  */
 
@@ -46,6 +49,15 @@ export default function Signup() {
   return (
 
     <div className='bg'>
+        {isSubmitted ? (
+            <div className='verification-message'>
+                <div className='email-icon'><MdMarkEmailRead /></div>
+                <h1>Check your email</h1>
+                <p>We have sent a verification link to your email</p>
+                <button>Resend Email</button>
+            </div>
+        ) : (
+    <>
     <header>
         <h1>Create your account</h1>
     </header>
@@ -91,12 +103,9 @@ export default function Signup() {
         <p className="login-link">Already have an account? <a href="/login">Log in</a></p>
         </section>
     </main>
+    </>
+    )}
     </div>
-
-
-
-
-
 
     
   )
