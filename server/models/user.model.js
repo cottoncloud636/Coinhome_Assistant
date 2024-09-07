@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
+import validator from "validator";
 
 const userSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: [true, 'A user must have a name'],
-        maxLength:[40, 'A name should be less than 60 characters'],// built-in validator
-        minLength:[1, 'A name should be at least 1 characters']
-    },
+    // name:{
+    //     type: String,
+    //     required: [true, 'A user must have a name'],
+    //     maxLength:[40, 'A name should be less than 60 characters'],// built-in validator
+    //     minLength:[1, 'A name should be at least 1 characters']
+    // },
     email:{
         type: String,
         unique: true, 
@@ -18,7 +19,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A password is required'],
         minLength: [8, 'A password must contain at least 8 characters'],
-        maxLength: [20, 'A password should not be more 20 characters'],
+        // maxLength: [20, 'A password should not be more 20 characters'],
         select: false //set to false so that psw will never show up at any output
     }, 
 },

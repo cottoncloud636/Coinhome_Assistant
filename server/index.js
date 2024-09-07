@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan'; //logs HTTP req and res, for debug purpose
+import authRouter from './routes/auth.routes.js';
 
 import mongoose from 'mongoose';
 
@@ -12,6 +13,7 @@ import {createThread, addMessageToThread, runAssistant} from './openaiService.js
  * step 1: configure express, dotevn 
  * step 2: connect mongoDB using mongoose 
  * step 3: create user model
+ * step 4: use 
  */
 
 const app = express();
@@ -41,7 +43,7 @@ app.use(express.json());//by default, developers are not allowed to send json di
               //middleware provided by Express that parses incoming JSON data in the body of an HTTP request. 
 
 
-// app.use('/api/auth', authRouter);
+app.use('/api/auth', authRouter);
 // app.use('/api/user', userRouter);
 // app.all('*', (req, res, next)=>{
 //   //????????????? place holder
@@ -81,6 +83,19 @@ app.post('/api/openai', async(req, res)=>{ //asynchronous, meaning it will wait 
 }
 });
 
+app.use((err, req, res, next) => { //accept error as an arg
+  const statusCode = err.statusCode || 500; //get the status code caused from the err and save to statusCode
+          //or if there is no such status code caused from err, then simply use 500
+  const message = err.message || '500: internal server error';
+  return res.status(statusCode).json(
+    {
+      success: false,
+      statusCode, //same as code -- statusCode: statusCode, but since key-value are same name, in ES6, 
+      //I can omit this "duplicate" name
+      message,
+    }
+  );                
+});
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, ()=>{

@@ -5,3 +5,7 @@ npm i mongoose
 npm i morgan
 
 npm i validator
+
+npm install nodemailer jsonwebtoken
+
+npm i nodemailer
