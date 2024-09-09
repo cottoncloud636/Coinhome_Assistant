@@ -14,7 +14,8 @@ export const signup = async(req, res, next)=>{
     const newUser = new User(
         {
             email, 
-            password: hashedPassword
+            password: hashedPassword,
+            verified: false //user is initially unverified until their token in verification email is verified
         });
     try {
         await newUser.save();
@@ -23,7 +24,7 @@ export const signup = async(req, res, next)=>{
                                             //whenever a new user is created
 
         // | send verification email
-        const verificationLink = `http://localhost:3000/verify/${token}`;
+        const verificationLink = `http://localhost:3000/signup/verify/${token}`;
         await sendVerificationEmail(email, verificationLink);
 
     

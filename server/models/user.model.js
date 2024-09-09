@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
         // maxLength: [20, 'A password should not be more 20 characters'],
         select: false //set to false so that psw will never show up at any output
     }, 
+    verified: {
+        type: Boolean,
+        default: false  // User is unverified by default
+      }
 },
     //besides that, timestamps info is very useful, will record time of user account created and updated, which is
     //useful for searching user account in the future
