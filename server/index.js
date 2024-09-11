@@ -3,23 +3,22 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan'; //logs HTTP req and res, for debug purpose
 import authRouter from './routes/auth.routes.js';
-
+import { fileURLToPath } from 'url';
+import path from 'path';
 import mongoose from 'mongoose';
+
 
 
 import {createThread, addMessageToThread, runAssistant} from './openaiService.js';//????????????
 
+
+dotenv.config();
 /*
  * step 1: configure express, dotevn 
  * step 2: connect mongoDB using mongoose 
  * step 3: create user model
  * step 4: use 
  */
-
-const app = express();
-
-dotenv.config();
-
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 mongoose.connect(DB, { //this connect return a promise
     useNewUrlParser: true, //these are to take care of deprecations warnings
@@ -31,6 +30,11 @@ mongoose.connect(DB, { //this connect return a promise
   (err)=>{console.log(err)}
 );
 
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
+
+const app = express();
 
 
 // const port = process.env.PORT || 3000; //????????????????
@@ -42,12 +46,14 @@ app.use(cors({
 app.use(express.json());//by default, developers are not allowed to send json directly to server, hence, use this
               //middleware provided by Express that parses incoming JSON data in the body of an HTTP request. 
 
+app.use(express.static(path.join(__dirname, '../Coinhome_Assistant/client/dist')));
 
 app.use('/api/auth', authRouter);
 // app.use('/api/user', userRouter);
-// app.all('*', (req, res, next)=>{
-//   //????????????? place holder
-// })
+
+app.all('*', (req, res)=>{
+  res.sendFile(path.resolve(__dirname, '../Coinhome_Assistant/client/dist/index.html'));
+});
 
 /*
   For testing Restful API purpose

@@ -38,3 +38,48 @@ export const signup = async(req, res, next)=>{
         next(error);
     }
 };
+
+
+export const verifyemail = async (req, res, next)=>{
+    const {token} = req.params;
+    try {
+        // | verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // | find user in DB by ID 
+        const user = await User.findById(decoded.id);
+        
+        if(!user){
+            return res.status(404).json({
+                status: 'fail',
+                message: 'User not found'
+            });
+        }
+
+        if (user.verified){
+            return res.status(400).json({ //400: bad request
+                status: 'fail',
+                message: 'Email has already been verified'
+            });
+        }
+
+        user.verified = true;
+        await user.save();
+        res.status(200).json({ 
+            status: 'successful',
+            message: 'User verified successfully'
+        });
+
+    } catch (error) {
+        if (error.name === 'TokenExpiredError'){
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Verification link has expired'
+            });
+        }
+        res.status(400).json({
+            status: 'fail',
+            message: 'Invalid token'
+        });
+    }
+};

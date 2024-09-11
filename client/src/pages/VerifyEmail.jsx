@@ -41,24 +41,26 @@ export default function VerifyEmail() {
 
   return (
     <div>
-    <div>
-      <h1> Tell us about your self</h1>
-      {isLoading ? (<p>Please be patient, I am working on it &gt;~&lt; ...</p>) : (<p>{verificationMessage}</p>)}
-    </div>
+      <div>
+        {isLoading ? (<p>Please be patient, I am working on it &gt;~&lt; ...</p>) : (<p>{verificationMessage}</p>)}
+      </div>
 
-    {showForm && (
-      <form>
-        <div>
-          <label>First Name</label>
-          <input type='text' placeholder='First Name' required/>
-        </div>
-        <div>
-          <label>Last Name</label>
-          <input type='text' placeholder='Last Name' required/>
-        </div>
-        <button type='submit'>submit </button>
-      </form>
-    )}
+      {showForm && (
+        <>
+          <h1>Tell us about yourself</h1>
+          <form>
+            <div>
+              <label>First Name</label>
+              <input type='text' placeholder='First Name' required/>
+            </div>
+            <div>
+              <label>Last Name</label>
+              <input type='text' placeholder='Last Name' required/>
+            </div>
+            <button type='submit'>submit </button>
+          </form>
+        </>
+      )}
     </div>
   );
 }

@@ -41,9 +41,29 @@ export default function Signup() {
 
   //step 2
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const handleContinue = (event)=>{
+  const handleContinue = async (event)=>{
     event.preventDefault();
     setIsSubmitted(true);
+
+    //step 3. connect with the server, by sending formInfo
+    try { 
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formInfo),
+        });
+        const data = await response.json();
+        if (response.ok){
+            console.log('signup successful:', data);
+            setIsSubmitted(true);
+        } else{
+            console.error('signup failed:', data.message);
+        }
+    } catch (error) {
+        console.error('Error during signup:', error);
+    }
 };
 
   return (
@@ -106,7 +126,5 @@ export default function Signup() {
     </>
     )}
     </div>
-
-    
   )
 }

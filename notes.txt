@@ -9,3 +9,7 @@ npm i validator
 npm install nodemailer jsonwebtoken
 
 npm i nodemailer
+
+npm run build -- prepares project for production by bundling assets, optimizing code, and performing other necessary build steps. 
+
+SendGrid, Recovery code = MKAK4K5ZX19TXM2WD4V9X41N
